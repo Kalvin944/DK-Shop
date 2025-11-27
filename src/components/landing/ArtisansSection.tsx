@@ -1,9 +1,21 @@
 import { motion } from "framer-motion";
 
 const artisans = [
-  { name: "Lucie Perrin", role: "Cheffe boulangère", img: "https://placehold.co/500x600?text=L" },
-  { name: "Elliot Marchand", role: "Maître torréfacteur", img: "https://placehold.co/500x600?text=E" },
-  { name: "Sana Roussel", role: "Fermentation & R&D", img: "https://placehold.co/500x600?text=S" },
+  {
+    name: "Lucie Perrin",
+    role: "Cheffe boulangère",
+    img: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/018_1U1A0987_DEBORA_Original.jpg?raw=true",
+  },
+  {
+    name: "Elliot Marchand",
+    role: "Maître torréfacteur",
+    img: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/016_1U1A0977_DEBORA_Original.jpg?raw=true",
+  },
+  {
+    name: "Sana Roussel",
+    role: "Fermentation & R&D",
+    img: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/_DSC1423.jpg?raw=true",
+  },
 ];
 
 export function ArtisansSection() {
