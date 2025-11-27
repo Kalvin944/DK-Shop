@@ -12,11 +12,11 @@ const allSlides = [
     caption: "Wood-fired ovens glowing late at night",
   },
   {
-    src: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1400&q=80",
+    src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/024_1U1A1138_DEBORA.jpg?raw=true",
     caption: "The tasting room where stories are shared",
   },
   {
-    src: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80",
+    src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/012_1U1A0932_DEBORA.jpg?raw=true",
     caption: "Hands mixing the finest ingredients",
   },
   {
@@ -63,19 +63,21 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
     }
   });
 
-  // Phase 1 (0 to 0.12): Center all 5 images - all start at x: 0, then spread to centered positions
-  // Phase 2 (0.12 to 0.48): Create gap ONLY around center image and start zoom
-  
+  // Phase 1 (0 to 0.2): Center all 5 images on screen
+  // Phase 2 (0.2 to 0.48): Create gap ONLY around center image and start zoom
+
   // Image size adapts to viewport - 70vh height, 0.75 aspect ratio (52.5vh width)
-  // Zoom starts only after images are centered (after 0.12)
-  const centerScale = useTransform(scrollYProgress, [0.12, 0.48], [1, 4.4]);
-  const centerYOffset = useTransform(scrollYProgress, [0.12, 0.45], [0, -40]);
+  // Zoom starts only after images are centered (after 0.2)
+  const centerScale = useTransform(scrollYProgress, [0.2, 0.48], [1, 4.4]);
+  const centerYOffset = useTransform(scrollYProgress, [0.2, 0.45], [0, -40]);
   const siblingsOpacity = useTransform(scrollYProgress, [0.35, 0.48], [1, 0]);
 
-  // Calculate base spacing: image width (52.5vh) + small gap (1vw)
-  // We'll calculate this as approximately 32vw for average screens
-  const baseSpacingVw = 32; // Base spacing between images in vw
-  
+  // Calculate base spacing using viewport units that scale with screen
+  // Image width is 52.5vh, we'll use vh units for responsive spacing
+  // Base spacing = image width (52.5vh) + small gap (2vh) = 54.5vh
+  const baseSpacingVh = 54.5; // Base spacing in vh units (responsive to screen height)
+  const gapExpansionVh = 20; // Additional gap expansion in vh units
+
   const cardOffsets = allSlides.map((_, index) => {
     const relative = index - 2;
 
@@ -84,26 +86,24 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
       return useTransform(scrollYProgress, [0, 0.48], [0, 0]);
     }
 
-    // All images start at their base positions
-    // Phase 2 (0.12 to 0.48): Gap expands ONLY between center (index 2) and its immediate neighbors (index 1 and 3)
+    // Phase 1 (0 to 0.2): Images are already centered, stay in position
+    // Phase 2 (0.2 to 0.48): Gap expands ONLY between center and its neighbors
 
     // Left neighbor (index 1) - positioned to the left of center
-    // Gap expands by moving this image further LEFT (away from center)
     if (relative === -1) {
       return useTransform(
         scrollYProgress,
-        [0, 0.12, 0.48],
-        [-baseSpacingVw, -baseSpacingVw, -baseSpacingVw - 25] // Moves further left to create gap
+        [0, 0.2, 0.48], // Already at position, then expand gap
+        [-baseSpacingVh, -baseSpacingVh, -baseSpacingVh - gapExpansionVh]
       );
     }
 
     // Right neighbor (index 3) - positioned to the right of center
-    // Gap expands by moving this image further RIGHT (away from center)
     if (relative === 1) {
       return useTransform(
         scrollYProgress,
-        [0, 0.12, 0.48],
-        [baseSpacingVw, baseSpacingVw, baseSpacingVw + 25] // Moves further right to create gap
+        [0, 0.2, 0.48], // Already at position, then expand gap
+        [baseSpacingVh, baseSpacingVh, baseSpacingVh + gapExpansionVh]
       );
     }
 
@@ -112,8 +112,12 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
     if (relative === -2) {
       return useTransform(
         scrollYProgress,
-        [0, 0.12, 0.48],
-        [-baseSpacingVw * 2, -baseSpacingVw * 2, -baseSpacingVw * 2 - 25] // Moves with neighbor, gap stays constant
+        [0, 0.2, 0.48], // Already at position, then move with neighbor
+        [
+          -baseSpacingVh * 2,
+          -baseSpacingVh * 2,
+          -baseSpacingVh * 2 - gapExpansionVh,
+        ]
       );
     }
 
@@ -122,38 +126,44 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
     if (relative === 2) {
       return useTransform(
         scrollYProgress,
-        [0, 0.12, 0.48],
-        [baseSpacingVw * 2, baseSpacingVw * 2, baseSpacingVw * 2 + 25] // Moves with neighbor, gap stays constant
+        [0, 0.2, 0.48], // Already at position, then move with neighbor
+        [
+          baseSpacingVh * 2,
+          baseSpacingVh * 2,
+          baseSpacingVh * 2 + gapExpansionVh,
+        ]
       );
     }
 
     return useTransform(scrollYProgress, [0, 0.48], [0, 0]);
   });
-  
+
   // All images are visible from the start, only fade out later
   const imageOpacity = allSlides.map((_, index) => {
     if (index === 2) return useTransform(scrollYProgress, [0, 0.48], [1, 1]);
     return useTransform(scrollYProgress, [0, 0.35, 0.48], [1, 1, 0]);
   });
-  
+
   // Only the center image (index 2) zooms, others stay same size or shrink slightly
+  // Zoom starts only after images are centered (after 0.2)
   const cardScales = allSlides.map((_, index) =>
     index === 2
       ? centerScale
-      : useTransform(scrollYProgress, [0.12, 0.48], [1, 0.75])
+      : useTransform(scrollYProgress, [0.2, 0.48], [1, 0.75])
   );
 
-  // Convert offsets to vw units for x transform
-  // Centering is handled by left: 50% and marginLeft: -50% in the style
-  const cardOffsetsVw = cardOffsets.map((offset) =>
-    useTransform(offset, (val) => `${val}vw`)
+  // Convert offsets to vh units for responsive x transform
+  const cardOffsetsVh = cardOffsets.map((offset) =>
+    useTransform(offset, (val) => `${val}vh`)
   );
 
   // Carousel phase: full screen
   const carouselOpacity = useTransform(scrollYProgress, [0.5, 0.57], [0, 1]);
 
-  const nextSlide = () => setActiveSlide((prev) => (prev + 1) % allSlides.length);
-  const prevSlide = () => setActiveSlide((prev) => (prev - 1 + allSlides.length) % allSlides.length);
+  const nextSlide = () =>
+    setActiveSlide((prev) => (prev + 1) % allSlides.length);
+  const prevSlide = () =>
+    setActiveSlide((prev) => (prev - 1 + allSlides.length) % allSlides.length);
 
   useEffect(() => {
     if (carouselActive) {
@@ -181,7 +191,7 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
                   height: "70vh", // Takes 70% of viewport height
                   left: "50%",
                   top: "50%",
-                  x: cardOffsetsVw[index],
+                  x: cardOffsetsVh[index],
                   y: index === 2 ? centerYOffset : 0,
                   scale: cardScales[index],
                   zIndex: index === 2 ? 50 : 20 - Math.abs(index - 2), // Center image always on top
