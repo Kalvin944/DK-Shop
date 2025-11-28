@@ -56,13 +56,13 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
       onOverlayToggle?.(shouldOverlay);
     }
 
-    const shouldShowCarousel = latest > 0.55;
+    const shouldShowCarousel = latest > 0.48;
     if (carouselRef.current !== shouldShowCarousel) {
       carouselRef.current = shouldShowCarousel;
       setCarouselActive(shouldShowCarousel);
     }
 
-    const shouldCollapseGallery = latest > 0.55;
+    const shouldCollapseGallery = latest > 0.52;
     if (galleryCollapseRef.current !== shouldCollapseGallery) {
       galleryCollapseRef.current = shouldCollapseGallery;
       setGalleryCollapsed(shouldCollapseGallery);
@@ -162,57 +162,13 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
     useTransform(offset, (val) => `${val}vh`)
   );
 
-  // Carousel phase: full screen
-  const carouselOpacity = useTransform(scrollYProgress, [0.5, 0.57], [0, 1]);
+  // Carousel phase: full screen - appears when gallery fades out
+  const carouselOpacity = useTransform(scrollYProgress, [0.48, 0.55], [0, 1]);
 
   const nextSlide = () =>
     setActiveSlide((prev) => (prev + 1) % allSlides.length);
   const prevSlide = () =>
     setActiveSlide((prev) => (prev - 1 + allSlides.length) % allSlides.length);
-
-  // Handle swipe for mobile
-  const minSwipeDistance = 50;
-  const carouselContainerRef = useRef<HTMLDivElement>(null);
-  const touchStartRef = useRef<number | null>(null);
-  const touchEndRef = useRef<number | null>(null);
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (!carouselActive) return;
-    touchEndRef.current = null;
-    touchStartRef.current = e.targetTouches[0].clientX;
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!carouselActive) return;
-    touchEndRef.current = e.targetTouches[0].clientX;
-  };
-
-  const onTouchEnd = () => {
-    if (!carouselActive) {
-      touchStartRef.current = null;
-      touchEndRef.current = null;
-      return;
-    }
-
-    if (!touchStartRef.current || !touchEndRef.current) {
-      touchStartRef.current = null;
-      touchEndRef.current = null;
-      return;
-    }
-
-    const distance = touchStartRef.current - touchEndRef.current;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe) {
-      nextSlide();
-    } else if (isRightSwipe) {
-      prevSlide();
-    }
-
-    touchStartRef.current = null;
-    touchEndRef.current = null;
-  };
 
   useEffect(() => {
     if (carouselActive) {
@@ -226,11 +182,14 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
   }, [carouselActive]);
 
   return (
-    <section ref={stickyRef} className="-mx-4 h-[330vh] sm:-mx-6 lg:-mx-10">
+    <section
+      ref={stickyRef}
+      className="-mx-4 h-[330vh] sm:-mx-6 lg:-mx-10 relative"
+    >
       <div className="sticky top-0 h-screen overflow-hidden bg-sand text-white">
         {/* Gallery phase: 5 images horizontal */}
         {!galleryCollapsed && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center z-10">
             {allSlides.map((slide, index) => (
               <motion.div
                 key={slide.src}
@@ -263,12 +222,11 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
 
         {/* Carousel phase: full screen */}
         <motion.div
-          ref={carouselContainerRef}
-          style={{ opacity: carouselOpacity }}
-          className="absolute inset-0 z-40"
-          onTouchStart={carouselActive ? onTouchStart : undefined}
-          onTouchMove={carouselActive ? onTouchMove : undefined}
-          onTouchEnd={carouselActive ? onTouchEnd : undefined}
+          style={{
+            opacity: carouselOpacity,
+            zIndex: 100,
+          }}
+          className="absolute inset-0"
         >
           <img
             key={allSlides[activeSlide].src}
