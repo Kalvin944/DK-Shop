@@ -1,152 +1,12 @@
-import { useMemo, useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
-type GalleryImage = {
-  src: string;
-  alt: string;
-};
-
-const mockGalleries: Record<string, { title: string; images: GalleryImage[] }> =
-  {
-    "gallery-1": {
-      title: "Ancient Grain Fields",
-      images: [
-        {
-          src: "https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=1600&q=80",
-          alt: "Champs de blé anciens",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/024_1U1A1138_DEBORA.jpg?raw=true",
-          alt: "Pain sorti du four",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/012_1U1A0932_DEBORA.jpg?raw=true",
-          alt: "Préparation de la pâte",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/001_1U1A0815_DEBORA.jpg?raw=true",
-          alt: "Atelier Bakeat",
-        },
-      ],
-    },
-    "gallery-2": {
-      title: "Wood-Fired Ovens",
-      images: [
-        {
-          src: "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?auto=format&fit=crop&w=1600&q=80",
-          alt: "Four à bois",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/024_1U1A1138_DEBORA.jpg?raw=true",
-          alt: "Pain sorti du four",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/012_1U1A0932_DEBORA.jpg?raw=true",
-          alt: "Préparation de la pâte",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/001_1U1A0815_DEBORA.jpg?raw=true",
-          alt: "Atelier Bakeat",
-        },
-      ],
-    },
-    "gallery-3": {
-      title: "The Tasting Room",
-      images: [
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/024_1U1A1138_DEBORA.jpg?raw=true",
-          alt: "Pain sorti du four",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/012_1U1A0932_DEBORA.jpg?raw=true",
-          alt: "Préparation de la pâte",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/001_1U1A0815_DEBORA.jpg?raw=true",
-          alt: "Atelier Bakeat",
-        },
-        {
-          src: "https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=1600&q=80",
-          alt: "Champs de blé anciens",
-        },
-      ],
-    },
-    "gallery-4": {
-      title: "Hands Mixing Ingredients",
-      images: [
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/012_1U1A0932_DEBORA.jpg?raw=true",
-          alt: "Préparation de la pâte",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/024_1U1A1138_DEBORA.jpg?raw=true",
-          alt: "Pain sorti du four",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/001_1U1A0815_DEBORA.jpg?raw=true",
-          alt: "Atelier Bakeat",
-        },
-        {
-          src: "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?auto=format&fit=crop&w=1600&q=80",
-          alt: "Four à bois",
-        },
-      ],
-    },
-    "gallery-5": {
-      title: "Fresh Loaves Cooling",
-      images: [
-        {
-          src: "https://images.unsplash.com/photo-1481391032119-d89fee407e44?auto=format&fit=crop&w=1600&q=80",
-          alt: "Pains frais sur grille",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/024_1U1A1138_DEBORA.jpg?raw=true",
-          alt: "Pain sorti du four",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/012_1U1A0932_DEBORA.jpg?raw=true",
-          alt: "Préparation de la pâte",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/001_1U1A0815_DEBORA.jpg?raw=true",
-          alt: "Atelier Bakeat",
-        },
-      ],
-    },
-    // Fallback pour compatibilité
-    origin: {
-      title: "Sourdough Origins",
-      images: [
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/024_1U1A1138_DEBORA.jpg?raw=true",
-          alt: "Pain sorti du four",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/012_1U1A0932_DEBORA.jpg?raw=true",
-          alt: "Préparation de la pâte",
-        },
-        {
-          src: "https://github.com/Kbelony/DK-Shop/blob/main/src/assets/scss/001_1U1A0815_DEBORA.jpg?raw=true",
-          alt: "Atelier Bakeat",
-        },
-        {
-          src: "https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=1600&q=80",
-          alt: "Champs de blé anciens",
-        },
-      ],
-    },
-  };
+import { useGallery } from "@/hooks/useGallery";
 
 export function GalleryPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
-  const gallery = useMemo(() => {
-    if (id && mockGalleries[id]) return mockGalleries[id];
-    // Fallback vers gallery-1 si l'ID n'existe pas
-    return mockGalleries["gallery-1"] || mockGalleries.origin;
-  }, [id]);
+  const { gallery, loading, error } = useGallery(id);
 
   // Scroll en haut de la page au chargement - plusieurs méthodes pour être sûr
   useLayoutEffect(() => {
@@ -215,75 +75,98 @@ export function GalleryPage() {
                 '"Inter Display", "Inter Display Placeholder", sans-serif',
             }}
           >
-            {gallery.title}
+            {gallery?.title || "Gallery"}
           </h1>
-          <p className="max-w-2xl text-sm text-muted-foreground">
-            Cette galerie est alimentée par un jeu de données mocké. Plus tard,
-            elle pourra être reliée à un album Google Photos via une API ou un
-            backend dédié.
-          </p>
+          {error && (
+            <p className="max-w-2xl text-sm text-red-600">
+              Erreur lors du chargement: {error}
+            </p>
+          )}
+          {!error && (
+            <p className="max-w-2xl text-sm text-muted-foreground">
+              {loading
+                ? "Chargement des images..."
+                : "Galerie chargée depuis Google Photos ou données mockées"}
+            </p>
+          )}
         </header>
       </section>
 
       {/* Images full-width en desktop, sans padding */}
-      <section className="mx-auto max-w-6xl px-2 sm:px-4 lg:px-0 pb-24 space-y-10">
-        {/* 1. Grande image plein largeur */}
-        {gallery.images[0] && (
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
-            className="overflow-hidden"
-          >
-            <img
-              src={gallery.images[0].src}
-              alt={gallery.images[0].alt}
-              className="h-[560px] w-full object-cover"
-            />
-          </motion.div>
-        )}
-
-        {/* 2. Deux images verticales côte à côte */}
-        {(gallery.images[1] || gallery.images[2]) && (
-          <div className="grid gap-4 md:grid-cols-2">
-            {gallery.images.slice(1, 3).map((image) => (
-              <motion.div
-                key={image.src}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-                className="overflow-hidden"
-              >
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="h-[520px] w-full object-cover"
-                />
-              </motion.div>
-            ))}
+      {loading && (
+        <section className="mx-auto max-w-6xl px-2 sm:px-4 lg:px-0 pb-24">
+          <div className="flex items-center justify-center h-96">
+            <p className="text-muted-foreground">Chargement...</p>
           </div>
-        )}
+        </section>
+      )}
 
-        {/* 3. Dernière image large en bas */}
-        {gallery.images[3] && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-            className="overflow-hidden"
-          >
-            <img
-              src={gallery.images[3].src}
-              alt={gallery.images[3].alt}
-              className="h-[460px] w-full object-cover"
-            />
-          </motion.div>
-        )}
-      </section>
+      {!loading && gallery && (
+        <section className="mx-auto max-w-6xl px-2 sm:px-4 lg:px-0 pb-24 space-y-10">
+          {/* 1. Grande image plein largeur */}
+          {gallery.images[0] && (
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+              className="overflow-hidden"
+            >
+              <img
+                src={gallery.images[0].src}
+                alt={gallery.images[0].alt}
+                className="h-[560px] w-full object-cover"
+              />
+            </motion.div>
+          )}
+
+          {/* 2. Deux images verticales côte à côte */}
+          {(gallery.images[1] || gallery.images[2]) && (
+            <div className="grid gap-4 md:grid-cols-2">
+              {gallery.images.slice(1, 3).map((image) => (
+                <motion.div
+                  key={image.src}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                  className="overflow-hidden"
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="h-[520px] w-full object-cover"
+                  />
+                </motion.div>
+              ))}
+            </div>
+          )}
+
+          {/* 3. Dernière image large en bas */}
+          {gallery.images[3] && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+              className="overflow-hidden"
+            >
+              <img
+                src={gallery.images[3].src}
+                alt={gallery.images[3].alt}
+                className="h-[460px] w-full object-cover"
+              />
+            </motion.div>
+          )}
+        </section>
+      )}
+
+      {!loading && !gallery && (
+        <section className="mx-auto max-w-6xl px-2 sm:px-4 lg:px-0 pb-24">
+          <div className="flex items-center justify-center h-96">
+            <p className="text-muted-foreground">Aucune galerie trouvée</p>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
-
-
