@@ -31,6 +31,8 @@ const allSlides = [
   },
 ];
 
+const INITIAL_SLIDE = Math.floor(allSlides.length / 2);
+
 interface OriginHeroSectionProps {
   onOverlayToggle?: (isTransparent: boolean) => void;
 }
@@ -46,7 +48,7 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
   });
 
   const [carouselActive, setCarouselActive] = useState(false);
-  const [activeSlide, setActiveSlide] = useState(2); // Start with middle slide (index 2)
+  const [activeSlide, setActiveSlide] = useState(INITIAL_SLIDE); // Start with middle slide
   const [galleryCollapsed, setGalleryCollapsed] = useState(false);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
@@ -58,6 +60,10 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
 
     const shouldShowCarousel = latest > 0.48;
     if (carouselRef.current !== shouldShowCarousel) {
+      // When entering fullscreen carousel, reset to middle slide
+      if (!carouselRef.current && shouldShowCarousel) {
+        setActiveSlide(INITIAL_SLIDE);
+      }
       carouselRef.current = shouldShowCarousel;
       setCarouselActive(shouldShowCarousel);
     }
