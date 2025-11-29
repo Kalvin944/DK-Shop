@@ -50,11 +50,7 @@ export default async function handler(
     // Échanger le code d'autorisation contre des tokens
     const { tokens } = await oauth2Client.getToken(code);
 
-    // Stocker les tokens (dans un vrai projet, utilisez une base de données)
-    // Pour Vercel, on peut utiliser Vercel KV ou une autre solution
-    // Pour l'instant, on les stocke dans les cookies (non sécurisé pour la prod, mais fonctionnel)
-    
-    // Option 1: Stocker dans les cookies (simple mais limité)
+    // Stocker les tokens dans les cookies
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -62,16 +58,33 @@ export default async function handler(
       maxAge: 60 * 60 * 24 * 7, // 7 jours
     };
 
-    res.setHeader(
-      "Set-Cookie",
-      `google_access_token=${tokens.access_token}; Path=/; ${cookieOptions.httpOnly ? "HttpOnly" : ""}; ${cookieOptions.secure ? "Secure" : ""}; SameSite=${cookieOptions.sameSite}; Max-Age=${cookieOptions.maxAge}`
-    );
+    // Construire les cookies correctement
+    const accessTokenCookie = [
+      `google_access_token=${tokens.access_token}`,
+      "Path=/",
+      cookieOptions.httpOnly ? "HttpOnly" : "",
+      cookieOptions.secure ? "Secure" : "",
+      `SameSite=${cookieOptions.sameSite}`,
+      `Max-Age=${cookieOptions.maxAge}`,
+    ]
+      .filter(Boolean)
+      .join("; ");
+
+    res.setHeader("Set-Cookie", accessTokenCookie);
 
     if (tokens.refresh_token) {
-      res.setHeader(
-        "Set-Cookie",
-        `google_refresh_token=${tokens.refresh_token}; Path=/; HttpOnly; ${cookieOptions.secure ? "Secure" : ""}; SameSite=${cookieOptions.sameSite}; Max-Age=${60 * 60 * 24 * 30}` // 30 jours pour refresh token
-      );
+      const refreshTokenCookie = [
+        `google_refresh_token=${tokens.refresh_token}`,
+        "Path=/",
+        "HttpOnly",
+        cookieOptions.secure ? "Secure" : "",
+        `SameSite=${cookieOptions.sameSite}`,
+        `Max-Age=${60 * 60 * 24 * 30}`, // 30 jours
+      ]
+        .filter(Boolean)
+        .join("; ");
+
+      res.setHeader("Set-Cookie", refreshTokenCookie);
     }
 
     // Rediriger vers la page d'accueil avec un message de succès
@@ -84,4 +97,3 @@ export default async function handler(
     });
   }
 }
-

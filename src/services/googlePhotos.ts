@@ -26,9 +26,17 @@ export type Gallery = {
 /**
  * Configuration des albums Google Photos
  * Mappe les IDs de galerie vers les IDs d'albums Google Photos
+ * 
+ * IMPORTANT: Ce ne sont PAS les liens de partage (photos.app.goo.gl)
+ * Ce sont les vrais albumId de l'API Google Photos
+ * 
+ * Pour obtenir les vrais IDs:
+ * 1. Authentifiez-vous: /api/auth/login
+ * 2. Listez vos albums: /api/albums/list
+ * 3. Copiez les "id" de la réponse et collez-les ici
  */
 export const GOOGLE_PHOTOS_ALBUM_MAP: Record<string, string> = {
-  "gallery-1": "", // À remplir avec l'albumId Google Photos
+  "gallery-1": "", // Remplacez par le vrai albumId (ex: "AF1QipOJqJff-5owDQSggspJeUWJAxH9t9DYwVckl3JNob1vdX7N1mwiXjFnSMumAeaehQ")
   "gallery-2": "",
   "gallery-3": "",
   "gallery-4": "",
@@ -113,6 +121,7 @@ export async function fetchGalleryFromGooglePhotos(
  * Utilisez uniquement comme fallback de dernier recours
  */
 export async function extractImagesFromShareLink(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _shareLink: string
 ): Promise<GalleryImage[]> {
   // Cette méthode nécessiterait un backend qui fait du scraping

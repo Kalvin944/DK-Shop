@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import {
+  fetchGalleryFromGooglePhotos,
   // fetchGalleryFromGooglePhotos, // Décommentez quand vous activez Google Photos
   type Gallery,
 } from "@/services/googlePhotos";
@@ -33,10 +34,10 @@ export function useGallery(galleryId: string | undefined): UseGalleryResult {
       try {
         // Option 1: Essayer de récupérer depuis Google Photos
         // Décommentez cette ligne quand vous avez configuré le backend
-        // const googlePhotosGallery = await fetchGalleryFromGooglePhotos(galleryId);
+        const googlePhotosGallery = await fetchGalleryFromGooglePhotos(galleryId);
         
         // Pour l'instant, on utilise directement les données mockées
-        const googlePhotosGallery = null;
+        //const googlePhotosGallery = null;
 
         if (googlePhotosGallery) {
           setGallery(googlePhotosGallery);
