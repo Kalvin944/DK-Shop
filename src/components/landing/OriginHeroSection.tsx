@@ -74,8 +74,7 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
 
   // Image size adapts to viewport - 70vh height, 0.75 aspect ratio (52.5vh width)
   // Zoom starts only after images are centered (after 0.2)
-  const centerScale = useTransform(scrollYProgress, [0.2, 0.48], [1, 4.4]);
-  const centerYOffset = useTransform(scrollYProgress, [0.2, 0.45], [0, -40]);
+  const centerScale = useTransform(scrollYProgress, [0.2, 0.48], [1, 3.2]);
 
   // Calculate base spacing using viewport units that scale with screen
   // Image width is 52.5vh, we'll use vh units for responsive spacing
@@ -186,6 +185,17 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
       ref={stickyRef}
       className="-mx-4 h-[330vh] sm:-mx-6 lg:-mx-10 relative"
     >
+      <section className="space-y-10 pl-8">
+        <div className="flex flex-col gap-3">
+          <p className="uppercase tracking-[0.3em] text-xs text-muted-foreground">
+            Our artisans
+          </p>
+          <h2 className="font-heading text-4xl">
+            Les mains qui nourrissent la chaleur
+          </h2>
+        </div>
+      </section>
+
       <div className="sticky top-0 h-screen overflow-hidden bg-sand text-white">
         {/* Gallery phase: 5 images horizontal */}
         {!galleryCollapsed && (
@@ -200,7 +210,7 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
                   left: "50%",
                   top: "50%",
                   x: cardOffsetsVh[index],
-                  y: index === 2 ? centerYOffset : 0,
+                  y: 0,
                   scale: cardScales[index],
                   zIndex: index === 2 ? 50 : 20 - Math.abs(index - 2), // Center image always on top
                   borderRadius: 0,
@@ -236,20 +246,20 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/80" />
 
-          {/* Text centered at bottom */}
+          {/* Text centered at bottom - styled like \"Our artisans\" section */}
           <div className="absolute inset-0 flex flex-col items-center justify-end px-6 pb-14 text-center space-y-3">
-            <p className="text-xs uppercase tracking-[0.6em] text-white/70 font-bold">
-              THE ORIGIN
+            <p className="uppercase tracking-[0.3em] text-xs text-white/80">
+              The origin
             </p>
-            <h3
-              className="font-heading text-4xl lg:text-5xl font-extrabold leading-tight pb-10 lg:pb-4"
+            <h2
+              className="font-heading text-3xl sm:text-4xl lg:text-5xl leading-tight pb-10 lg:pb-4"
               style={{
                 fontFamily:
                   '"Inter Display", "Inter Display Placeholder", sans-serif',
               }}
             >
               {allSlides[activeSlide].caption}
-            </h3>
+            </h2>
           </div>
 
           {/* Navigation arrows */}
