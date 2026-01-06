@@ -8,6 +8,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 
 const allSlides = [
   {
@@ -238,7 +239,7 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
                   transformOrigin: "center center", // Ensure scaling happens from center
                 }}
               >
-                <img
+                <ImageWithSkeleton
                   src={slide.src}
                   alt={slide.caption}
                   className="h-full w-full object-cover"
@@ -267,7 +268,7 @@ export function OriginHeroSection({ onOverlayToggle }: OriginHeroSectionProps) {
             handleOpenGallery();
           }}
         >
-          <img
+          <ImageWithSkeleton
             key={allSlides[activeSlide].src}
             src={allSlides[activeSlide].src}
             alt={allSlides[activeSlide].caption}

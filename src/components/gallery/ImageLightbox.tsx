@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect } from "react";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 
 interface ImageLightboxProps {
   images: Array<{ src: string; alt: string }>;
@@ -71,10 +72,11 @@ export function ImageLightbox({
           className="relative z-10 w-[80vw] h-[80vh] flex items-center justify-center"
           onClick={(e) => e.stopPropagation()}
         >
-          <img
+          <ImageWithSkeleton
             src={images[currentIndex].src}
             alt={images[currentIndex].alt}
             className="max-w-full max-h-full object-contain"
+            skeletonClassName="max-w-full max-h-full"
           />
 
           {/* Navigation */}

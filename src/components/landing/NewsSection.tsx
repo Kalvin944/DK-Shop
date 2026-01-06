@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 
 const articles = [
   {
@@ -54,7 +55,12 @@ export function NewsSection() {
           >
             <Card className="group h-full overflow-hidden border border-[#e1d7c8] bg-sand/40 shadow-none transition duration-500 hover:-translate-y-2 hover:shadow-xl">
               <CardHeader className="relative p-0">
-                <img src={article.image} alt={article.title} className="h-64 w-full object-cover transition duration-700 group-hover:scale-105" />
+                <ImageWithSkeleton
+                  src={article.image}
+                  alt={article.title}
+                  className="h-64 w-full object-cover transition duration-700 group-hover:scale-105"
+                  skeletonClassName="h-64"
+                />
                 <span className="absolute right-4 top-4 rounded-full bg-white/80 px-4 py-1 text-xs uppercase tracking-[0.3em] text-deep">
                   {article.category}
                 </span>

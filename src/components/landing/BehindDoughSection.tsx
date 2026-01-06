@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 
 const steps = [
   {
@@ -132,7 +133,7 @@ export function BehindDoughSection() {
                 </span>
               </button>
               <div className="overflow-hidden border border-[#e1d7c8] lg:hidden">
-                <img
+                <ImageWithSkeleton
                   src={step.image}
                   alt={step.title}
                   className="w-full h-auto object-contain"
@@ -147,11 +148,9 @@ export function BehindDoughSection() {
       <div className="relative hidden lg:block">
         <div className="sticky top-32 overflow-hidden border border-[#e1d7c8] shadow-lg">
           {steps.map((step, index) => (
-            <img
+            <div
               key={step.title}
-              src={step.image}
-              alt={step.title}
-              className={`w-full h-auto object-contain transition-opacity duration-0 ${
+              className={`w-full h-auto transition-opacity duration-0 ${
                 index === activeIndex
                   ? "relative opacity-100"
                   : "absolute top-0 left-0 opacity-0"
@@ -159,7 +158,13 @@ export function BehindDoughSection() {
               style={{
                 pointerEvents: index === activeIndex ? "auto" : "none",
               }}
-            />
+            >
+              <ImageWithSkeleton
+                src={step.image}
+                alt={step.title}
+                className="w-full h-auto object-contain"
+              />
+            </div>
           ))}
         </div>
       </div>

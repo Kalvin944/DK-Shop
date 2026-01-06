@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useGallery } from "@/hooks/useGallery";
 import { ImageLightbox } from "./ImageLightbox";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 
 export function GalleryPage() {
   const { id } = useParams<{ id: string }>();
@@ -128,7 +129,7 @@ export function GalleryPage() {
                       className="overflow-hidden cursor-pointer"
                       onClick={() => setLightboxIndex(index + pairIndex)}
                     >
-                      <img
+                      <ImageWithSkeleton
                         src={pairImage.src}
                         alt={pairImage.alt}
                         className="w-full h-auto object-contain"
@@ -156,7 +157,7 @@ export function GalleryPage() {
                   className="overflow-hidden cursor-pointer"
                   onClick={() => setLightboxIndex(index)}
                 >
-                  <img
+                  <ImageWithSkeleton
                     src={image.src}
                     alt={image.alt}
                     className="w-full h-auto object-contain"

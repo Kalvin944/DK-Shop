@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 
 const artisans = [
   {
@@ -60,16 +61,16 @@ function ArtisanCard({ artisan, index }: ArtisanCardProps) {
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Background avec blur */}
-        <img
-          src={artisan.img}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-40 scale-110 z-0"
-          aria-hidden="true"
-        />
-        <motion.img
-          src={artisan.img}
-          alt={artisan.name}
-          className="relative w-full h-full object-cover z-10"
+        <div className="absolute inset-0 w-full h-full z-0">
+          <ImageWithSkeleton
+            src={artisan.img}
+            alt=""
+            className="w-full h-full object-cover blur-3xl opacity-40 scale-110"
+            aria-hidden="true"
+          />
+        </div>
+        <motion.div
+          className="relative w-full h-full z-10"
           animate={{
             scale: isHovered ? 1.05 : 1,
           }}
@@ -77,7 +78,13 @@ function ArtisanCard({ artisan, index }: ArtisanCardProps) {
             duration: 0.45,
             ease: [0.25, 0.1, 0.25, 1],
           }}
-        />
+        >
+          <ImageWithSkeleton
+            src={artisan.img}
+            alt={artisan.name}
+            className="w-full h-full object-cover"
+          />
+        </motion.div>
         <motion.div
           className="absolute inset-0 flex items-center justify-center bg-black/40 z-20"
           initial={{ opacity: 0 }}
